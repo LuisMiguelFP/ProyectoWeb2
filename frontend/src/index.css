@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.neon-glow {
+  box-shadow: 
+    0 0 10px rgba(74, 222, 128, 0.6), /* Sombra interior suave */
+    0 0 20px rgba(74, 222, 128, 0.4), /* Sombra exterior más amplia */
+    0 0 30px rgba(74, 222, 128, 0.2); /* Sombra difusa */
+}
