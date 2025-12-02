@@ -1,5 +1,7 @@
 const API_URL = "http://localhost:5000/api";
 
+
+
 export const registerUser = async (data) => {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
@@ -27,15 +29,18 @@ export const getItems = async (token) => {
   return res.json();
 };
 
-
 export const createItem = async (data, token) => {
   const res = await fetch(`${API_URL}/items`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify(data),
   });
   return res.json();
 };
+
 export const getSingleItem = async (id, token) => {
   const res = await fetch(`${API_URL}/items/${id}`, {
     headers: {

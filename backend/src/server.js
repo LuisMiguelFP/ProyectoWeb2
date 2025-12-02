@@ -18,32 +18,40 @@ const app = express();
 // Middlewares
 app.use(
   cors({
-    origin: "http://localhost:5173", // permite tu frontend
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
 app.use(express.json());
 
-// ✅ RELACIONES ENTRE MODELOS
+// Relaciones
 User.hasMany(Item, { foreignKey: "userId", onDelete: "CASCADE" });
 Item.belongsTo(User, { foreignKey: "userId" });
 
-// Rutas principales
+// Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
 
-// Ruta base (solo para probar)
 app.get("/", (req, res) => {
   res.json({ message: "Servidor funcionando correctamente 🚀" });
 });
 
-// Sincronizar base de datos y levantar el servidor
+// Puerto
 const PORT = process.env.PORT || 5000;
 
+// ------------- SINCRONIZACIÓN ------------------
 (async () => {
   try {
-    await sequelize.sync(); // crea las tablas si no existen
-    console.log("✅ Base de datos sincronizada correctamente.");
+    // 👉 SOLO CORRE FORCE SI ACTIVAS ESTA VARIABLE
+    const FORCE_DB = process.env.FORCE_DB === "true";
+
+    await sequelize.sync({ force: FORCE_DB });
+
+    if (FORCE_DB) {
+      console.log("🔥 Tablas REGENERADAS (FORCE = TRUE)");
+    } else {
+      console.log("✅ Base de datos sincronizada (sin borrar tablas).");
+    }
 
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);

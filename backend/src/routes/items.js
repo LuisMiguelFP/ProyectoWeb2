@@ -8,13 +8,17 @@ const router = express.Router();
 // 🟦 Obtener items con filtros
 router.get("/", authRequired, async (req, res) => {
   try {
-    const { priority, completed, search } = req.query;
+    const { priority, status, search } = req.query;
 
     const where = { userId: req.user.id };
 
+    // Filtro prioridad
     if (priority) where.priority = priority;
-    if (completed) where.completed = completed === "true";
 
+    // Filtro estado
+    if (status) where.status = status;
+
+    // Búsqueda por título
     if (search) {
       where.title = { like: `%${search}%` };
     }
@@ -39,12 +43,13 @@ router.post(
     }
 
     try {
-      const { title, description, priority, dueDate, tags } = req.body;
+      const { title, description, priority, status, dueDate, tags } = req.body;
 
       const newItem = await Item.create({
         title,
         description,
         priority,
+        status,   // ← ahora sí guardamos estado
         dueDate,
         tags,
         userId: req.user.id,

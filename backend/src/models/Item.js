@@ -1,46 +1,63 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
-const Item = sequelize.define("Item", {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
+const Item = sequelize.define(
+  "Item",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
 
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
 
-  description: {
-    type: DataTypes.TEXT,
-  },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
 
-  completed: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  },
+    priority: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "medium",
+      validate: {
+        isIn: [["low", "medium", "high"]],
+      },
+    },
 
-  priority: {
-    type: DataTypes.ENUM("low", "medium", "high"),
-    defaultValue: "medium",
-  },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "pending",
+      validate: {
+        isIn: [["pending", "in_progress", "completed"]],
+      },
+    },
 
-  dueDate: {
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
+    dueDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
 
-  tags: {
-    type: DataTypes.JSON, 
-    defaultValue: [],
-  },
+    tags: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: true,
+      defaultValue: [],
+    },
 
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  {
+    timestamps: true,
+    tableName: "items",
   }
-});
+);
 
 export default Item;
