@@ -18,15 +18,40 @@ export const loginUser = async (data) => {
   return res.json();
 };
 
-export const getItems = async () => {
-  const res = await fetch(`${API_URL}/items`);
+export const getItems = async (token) => {
+  const res = await fetch(`${API_URL}/items`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return res.json();
 };
+
 
 export const createItem = async (data, token) => {
   const res = await fetch(`${API_URL}/items`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify(data),
+  });
+  return res.json();
+};
+export const getSingleItem = async (id, token) => {
+  const res = await fetch(`${API_URL}/items/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.json();
+};
+
+export const updateItem = async (id, data, token) => {
+  const res = await fetch(`${API_URL}/items/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify(data),
   });
   return res.json();

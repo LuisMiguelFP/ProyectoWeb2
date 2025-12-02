@@ -2,10 +2,14 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import sequelize from "./config/db.js";
+
+// Modelos
 import User from "./models/User.js";
 import Item from "./models/Item.js";
+
+// Rutas
 import authRoutes from "./routes/auth.js";
-import itemRoutes from "./routes/items.js"; // ✅ importa las rutas de items
+import itemRoutes from "./routes/items.js";
 
 dotenv.config();
 
@@ -20,9 +24,13 @@ app.use(
 );
 app.use(express.json());
 
-// ✅ Rutas principales
+// ✅ RELACIONES ENTRE MODELOS
+User.hasMany(Item, { foreignKey: "userId", onDelete: "CASCADE" });
+Item.belongsTo(User, { foreignKey: "userId" });
+
+// Rutas principales
 app.use("/api/auth", authRoutes);
-app.use("/api/items", itemRoutes); // ✅ ahora tu frontend podrá acceder a /api/items
+app.use("/api/items", itemRoutes);
 
 // Ruta base (solo para probar)
 app.get("/", (req, res) => {
